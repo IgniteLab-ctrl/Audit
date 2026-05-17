@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ignite Lab | Artist Discovery Questionnaire</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --crimson: #8B1A1A;
+      --crimson-dark: #6B1212;
+      --gold: #C8973A;
+      --gold-light: #E0B060;
+      --cream: #FAF7F2;
+      --ink: #1A1210;
+      --ink-soft: #3A2E2C;
+      --warm-gray: #6B5E5A;
+      --border: rgba(139,26,26,0.15);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--ink);
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 48px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Background texture */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 20%, rgba(139,26,26,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 80% 80%, rgba(200,151,58,0.08) 0%, transparent 60%);
+    }
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+
+    /* ── WRAPPER ── */
+    .wrapper {
+      position: relative; z-index: 1;
+      max-width: 780px; margin: 0 auto;
+    }
+
+    /* ── HEADER ── */
+    .form-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .logo-mark {
+      display: inline-flex; align-items: center; gap: 12px;
+      margin-bottom: 28px;
+    }
+    .logo-icon {
+      width: 44px; height: 44px; background: var(--crimson);
+      border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon svg { width: 26px; height: 26px; }
+    .logo-text {
+      font-family: var(--font-display); font-size: 1.4rem; font-weight: 700;
+      color: #fff; letter-spacing: .02em;
+    }
+    .logo-text span { color: var(--gold); }
+
+    .header-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: .72rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 16px;
+    }
+    .header-eyebrow::before, .header-eyebrow::after {
+      content: ''; display: block; width: 24px; height: 1px; background: var(--gold);
+    }
+
+    .form-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 900; color: #fff; line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .form-header h1 em { color: var(--gold); font-style: normal; }
+    .form-header p {
+      font-size: .95rem; color: rgba(255,255,255,.5);
+      line-height: 1.75; max-width: 540px; margin: 0 auto;
+    }
+
+    /* ── PROGRESS ── */
+    .progress-bar {
+      background: rgba(255,255,255,.08); border-radius: 99px;
+      height: 4px; margin-bottom: 48px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; background: linear-gradient(90deg, var(--crimson), var(--gold));
+      border-radius: 99px; transition: width .5s ease;
+      width: 0%;
+    }
+    .progress-label {
+      text-align: right; font-size: .75rem; color: rgba(255,255,255,.35);
+      letter-spacing: .06em; margin-top: 8px;
+    }
+
+    /* ── CARD ── */
+    .form-card {
+      background: var(--cream);
+      border-radius: 24px; overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.4), 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    /* ── PILLAR HEADER ── */
+    .pillar-header {
+      background: var(--crimson);
+      padding: 28px 40px;
+      position: relative; overflow: hidden;
+    }
+    .pillar-header::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 80% 50%, rgba(200,151,58,0.2), transparent 60%);
+    }
+    .pillar-num {
+      font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+      color: rgba(255,255,255,.5); margin-bottom: 4px; position: relative; z-index: 1;
+    }
+    .pillar-title {
+      font-family: var(--font-display); font-size: 1.3rem; font-weight: 700;
+      color: #fff; position: relative; z-index: 1;
+    }
+
+    /* ── FORM BODY ── */
+    .form-body { padding: 40px; }
+
+    .form-group { margin-bottom: 32px; }
+    .form-group:last-child { margin-bottom: 0; }
+
+    .q-num {
+      display: inline-block;
+      font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--crimson); margin-bottom: 6px;
+    }
+
+    label {
+      display: block; font-weight: 600; font-size: .93rem;
+      color: var(--ink); margin-bottom: 6px; line-height: 1.45;
+    }
+    label .req { color: var(--crimson); margin-left: 2px; }
+
+    .hint {
+      font-size: .8rem; color: var(--warm-gray); margin-bottom: 10px;
+      font-style: italic; line-height: 1.5;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    textarea,
+    select {
+      width: 100%; padding: 13px 16px;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-family: var(--font-body); font-size: .92rem; color: var(--ink);
+      background: #fff; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      appearance: none;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--crimson);
+      box-shadow: 0 0 0 3px rgba(139,26,26,0.1);
+    }
+    textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+    /* Custom select arrow */
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: '';
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      width: 0; height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid var(--warm-gray);
+      pointer-events: none;
+    }
+
+    /* ── DIVIDER ── */
+    .pillar-divider {
+      height: 1px; background: var(--border); margin: 0 40px;
+    }
+
+    /* ── FOOTER ── */
+    .form-footer {
+      padding: 32px 40px 40px;
+      background: #fff;
+      border-top: 1px solid var(--border);
+    }
+    .footer-note {
+      font-size: .8rem; color: var(--warm-gray); line-height: 1.6; margin-bottom: 24px;
+      padding: 14px 18px;
+      background: var(--cream); border-radius: 8px;
+      border-left: 3px solid var(--gold);
+    }
+
+    .submit-btn {
+      width: 100%; padding: 16px 32px;
+      background: var(--crimson); color: #fff;
+      border: none; border-radius: 10px; cursor: pointer;
+      font-family: var(--font-body); font-size: 1rem; font-weight: 700;
+      letter-spacing: .05em; text-transform: uppercase;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 6px 24px rgba(139,26,26,0.3);
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .submit-btn:hover { background: var(--crimson-dark); transform: translateY(-2px); box-shadow: 0 10px 32px rgba(139,26,26,0.4); }
+    .submit-btn:disabled { opacity: .7; cursor: not-allowed; transform: none; }
+    .submit-btn svg { width: 20px; height: 20px; }
+
+    /* ── SUCCESS ── */
+    #success-screen {
+      display: none;
+      position: relative; z-index: 1;
+      max-width: 600px; margin: 0 auto;
+      text-align: center; padding: 48px 20px;
+    }
+    .success-icon {
+      width: 80px; height: 80px; background: rgba(200,151,58,0.15);
+      border: 2px solid var(--gold); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 28px;
+    }
+    .success-icon svg { width: 36px; height: 36px; stroke: var(--gold); }
+    #success-screen h2 {
+      font-family: var(--font-display); font-size: 2rem; font-weight: 900;
+      color: #fff; margin-bottom: 16px;
+    }
+    #success-screen p { font-size: .95rem; color: rgba(255,255,255,.55); line-height: 1.75; }
+    #success-screen strong { color: var(--gold); }
+
+    /* ── FADE IN ANIMATION ── */
+    .fade-in { animation: fadeIn .6s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      body { padding: 28px 16px; }
+      .form-body { padding: 28px 24px; }
+      .pillar-header { padding: 24px; }
+      .pillar-divider { margin: 0 24px; }
+      .form-footer { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper" id="form-wrapper">
+
+  <!-- HEADER -->
+  <div class="form-header fade-in">
+    <div class="logo-mark">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="12,3 22,20 2,20" fill="rgba(255,255,255,0.95)"/>
+          <circle cx="12" cy="14" r="2.5" fill="#C8973A"/>
+        </svg>
+      </div>
+      <div class="logo-text"><span>Ignite</span> Lab</div>
+    </div>
+    <div class="header-eyebrow">Artist Intelligence Brief</div>
+    <h1>Artist Discovery<br><em>Questionnaire</em></h1>
+    <p>This questionnaire is your canvas. Your detailed answers give us the raw data we need to map out a clear, intentional strategy to position your music for the right audience.</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div style="position:relative; z-index:1;">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0 of 12 completed</div>
+  </div>
+
+  <!-- FORM CARD -->
+  <div class="form-card fade-in" style="animation-delay:.2s;">
+    <form id="discovery-form" novalidate>
+
+      <!-- PILLAR 1 -->
+      <div class="pillar-header">
+        <div class="pillar-num">Pillar 01</div>
+        <div class="pillar-title">Sonic Identity & Creative Vision</div>
+      </div>
+      <div class="form-body">
+
+        <div class="form-group">
+          <span class="q-num">Question 01</span>
+          <label for="q1">How would you describe your unique sound in three words? <span class="req">*</span></label>
+          <p class="hint">e.g., Afro-fusion, alternative soul, conscious rap</p>
+          <input type="text" id="q1" placeholder="Three words that define your sound..." required />
+        </div>
+
+        <div class="form-group">
+          <span class="q-num">Question 02</span>
+          <label for="q2">Who are 2–3 artists whose sound or career path aligns with where you see yourself? <span class="req">*</span></label>
+          <input type="text" id="q2" placeholder="Artist names..." required />
+        </div>
+
+        <div class="form-group">
+          <span class="q-num">Question 03</span>
+          <label for="q3">What is the central story or message behind your upcoming project or single? Why did you create it? <span class="req">*</span></label>
+          <textarea id="q3" placeholder="Share the inspiration and story behind your music..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <span class="q-num">Question 04</span>
+          <label for="q4">Provide links to 2 of your best tracks — released or unreleased. <span class="req">*</span></label>
+          <p class="hint">Google Drive, Audiomack, SoundCloud, or streaming links</p>
+          <textarea id="q4" placeholder="Paste links here (one per line)..." required></textarea>
+        </div>
+
+      </div>
+
+      <!-- PILLAR 2 -->
+      <div class="pillar-divider"></div>
+      <div class="pillar-header">
+        <div class="pillar-num">Pillar 02</div>
+        <div class="pillar-title">Audience, Competitor & Data Landscape</div>
+      </div>
+      <div class="form-body">
+
+        <div class="form-group">
+          <span class="q-num">Question 05</span>
+          <label for="q5">Who is your ideal listener? <span class="req">*</span></label>
+          <p class="hint">Describe their age, interests, and where they hang out online — e.g., "18–24 year olds in Lagos who love alternative fashion and spend time on TikTok"</p>
+          <textarea id="q5" placeholder="Describe your ideal fan base..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <span class="q-num">Question 06</span>
+          <label for="q6">What are your current social media handles and streaming profiles? <span class="req">*</span></label>
+          <p class="hint">Share links to Spotify, Apple Music, Audiomack, YouTube, Instagram, TikTok</p>
+          <textarea id="q6" placeholder="Paste your profile links here..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <span class="q-num">Question 07</span>
+          <label for="q7">Which platform currently gets you the most organic engagement? <span class="req">*</span></label>
+          <div class="select-wrap">
+            <select id="q7" required>
+              <option value="" disabled selected>Select a platform...</option>
+              <option value="TikTok">TikTok</option>
+              <option value="Instagram">Instagram</option>
+              <option value="X (Twitter)">X (Twitter)</option>
+              <option value="Facebook">Facebook</option>
+              <option value="YouTube">YouTube</option>
+              <option value="None yet / Starting fresh">None yet — Starting fresh</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <span class="q-num">Question 08</span>
+          <label for="q8">Who do you consider your immediate peers or competitors in the upcoming music space? <span class="req">*</span></label>
+          <input type="text" id="q8" placeholder="Name a few rising artists..." required />
+        </div>
+
+      </div>
+
+      <!-- PILLAR 3 -->
+      <div class="pillar-divider"></div>
+      <div class="pillar-header">
+        <div class="pillar-num">Pillar 03</div>
+        <div class="pillar-title">Business Goals & Project Scope</div>
+      </div>
+      <div class="form-body">
+
+        <div class="form-group">
+          <span class="q-num">Question 09</span>
+          <label for="q9">What is the primary goal for this specific release or campaign? <span class="req">*</span></label>
+          <div class="select-wrap">
+            <select id="q9" required>
+              <option value="" disabled selected>Select your primary goal...</option>
+              <option value="Drive streaming numbers">Drive streaming numbers</option>
+              <option value="Build a loyal social media following">Build a loyal social media following</option>
+              <option value="Get press & blog coverage">Get press & blog coverage</option>
+              <option value="Secure live performance bookings">Secure live performance bookings</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <span class="q-num">Question 10</span>
+          <label for="q10">What is your target release date or ideal campaign timeline? <span class="req">*</span></label>
+          <input type="text" id="q10" placeholder="e.g., Next month, October 15, Q1 2026..." required />
+        </div>
+
+        <div class="form-group">
+          <span class="q-num">Question 11</span>
+          <label for="q11">What has been your biggest frustration or obstacle when trying to get people to listen to your music? <span class="req">*</span></label>
+          <textarea id="q11" placeholder="Share past challenges honestly..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <span class="q-num">Question 12</span>
+          <label for="q12">Do you currently have a budget for paid advertising or influencer marketing? <span class="req">*</span></label>
+          <div class="select-wrap">
+            <select id="q12" required>
+              <option value="" disabled selected>Select an option...</option>
+              <option value="Yes, ready to invest">Yes — ready to invest</option>
+              <option value="A minimal budget">A minimal budget</option>
+              <option value="No budget, organic strategies only">No budget — organic strategies only</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- FOOTER -->
+      <div class="form-footer">
+        <p class="footer-note">
+          🔒 Your responses are confidential and will only be used by the Ignite Lab team to craft your personalized strategy. We will be in touch within <strong>48 hours</strong> to schedule your strategic alignment session.
+        </p>
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+          Submit to The Discovery Lab
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+
+<!-- SUCCESS SCREEN -->
+<div id="success-screen">
+  <div class="success-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  </div>
+  <h2>Blueprint Received.</h2>
+  <p>Thank you for submitting your data to <strong>Ignite Lab</strong>.<br><br>
+  Our team will analyze your sonic blueprint and artist profile in detail. We will be in touch within <strong>48 hours</strong> to schedule your strategic alignment session.</p>
+</div>
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+  // ── EMAILJS INIT ──
+  window.addEventListener('load', function () {
+    emailjs.init('pSxMAhgqRsYPNbwyb');
+  });
+
+  // ── PROGRESS TRACKING ──
+  const fields = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12'];
+  const total = fields.length;
+
+  function updateProgress() {
+    let filled = 0;
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.value.trim() !== '') filled++;
+    });
+    const pct = Math.round((filled / total) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = filled + ' of ' + total + ' completed';
+  }
+
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', updateProgress);
+    if (el) el.addEventListener('change', updateProgress);
+  });
+
+  // ── FORM SUBMIT ──
+  document.getElementById('discovery-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Validate all required fields
+    let allFilled = true;
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el || el.value.trim() === '') {
+        allFilled = false;
+        el.style.borderColor = 'var(--crimson)';
+        el.style.boxShadow = '0 0 0 3px rgba(139,26,26,0.2)';
+      } else {
+        el.style.borderColor = '';
+        el.style.boxShadow = '';
+      }
+    });
+
+    if (!allFilled) {
+      alert('Please answer all required questions before submitting.');
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+
+    const templateParams = {
+      q1:  document.getElementById('q1').value,
+      q2:  document.getElementById('q2').value,
+      q3:  document.getElementById('q3').value,
+      q4:  document.getElementById('q4').value,
+      q5:  document.getElementById('q5').value,
+      q6:  document.getElementById('q6').value,
+      q7:  document.getElementById('q7').value,
+      q8:  document.getElementById('q8').value,
+      q9:  document.getElementById('q9').value,
+      q10: document.getElementById('q10').value,
+      q11: document.getElementById('q11').value,
+      q12: document.getElementById('q12').value,
+    };
+
+    try {
+      await emailjs.send('service_sf7a55a', 'template_tojhzwl', templateParams);
+      document.getElementById('form-wrapper').style.display = 'none';
+      const s = document.getElementById('success-screen');
+      s.style.display = 'block';
+      s.classList.add('fade-in');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Submit to The Discovery Lab`;
+      btn.disabled = false;
+      alert('Something went wrong. Please try again.');
+      console.error('EmailJS error:', err);
+    }
+  });
+</script>
+</body>
+</html>
