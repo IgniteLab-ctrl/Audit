@@ -442,16 +442,15 @@
 </div>
 
 <!-- SUCCESS SCREEN -->
-<div id="success-screen">
-  <div class="success-icon">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="20 6 9 17 4 12"/>
-    </svg>
+<div class="form-container" id="success-message" style="display:none; text-align:center; padding:60px 40px;">
+    <div style="width:70px; height:70px; background:rgba(139,0,0,0.08); border:2px solid #d4af37; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 24px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="32" height="32">
+            <polyline points="20 6 9 17 4 12"/>
+        </svg>
+    </div>
+    <h2 style="font-size:1.8rem; color:#8b0000; margin-bottom:16px;">Blueprint Received.</h2>
+    <p style="color:#333; font-size:1rem; line-height:1.8;">Thank you for submitting your data to <strong>Ignite Lab</strong>.<br><br>Our team will analyze your sonic blueprint and artist profile in detail. We will be in touch within <strong>1 hours</strong> to begin the work with you.</p>
   </div>
-  <h2>Blueprint Received.</h2>
-  <p>Thank you for submitting your data to <strong>Ignite Lab</strong>.<br><br>
-  Our team will analyze your sonic blueprint and artist profile in detail. We will be in touch within <strong>1 hours</strong> to begin the work with you</p>
-</div>
 
 <!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -484,8 +483,12 @@
   });
 
   // ── FORM SUBMIT ──
-  document.getElementById('discovery-form').addEventListener('submit', async function(e) {
+  document.getElementById('discovery-form').addEventListener('submit', function(e) {
     e.preventDefault();
+    document.getElementById('form-wrapper').style.display = 'none';
+    document.getElementById('success-message').style.display = 'block';
+    window.scrollTo(0, 0);
+});;
 
     // Validate all required fields
     let allFilled = true;
