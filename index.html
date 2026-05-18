@@ -482,22 +482,20 @@
     if (el) el.addEventListener('change', updateProgress);
   });
 
-  // ── FORM SUBMIT ──
-  document.getElementById('discovery-form').addEventListener('submit', function(e) {
+  /// ── FORM SUBMIT ──
+  document.getElementById('discovery-form').addEventListener('submit', async function(e) {
     e.preventDefault();
-    document.getElementById('form-wrapper').style.display = 'none';
-    document.getElementById('success-message').style.display = 'block';
-    window.scrollTo(0, 0);
-});;
 
     // Validate all required fields
     let allFilled = true;
+    let firstEmpty = null;
     fields.forEach(id => {
       const el = document.getElementById(id);
       if (!el || el.value.trim() === '') {
         allFilled = false;
-        el.style.borderColor = 'var(--crimson)';
+        el.style.borderColor = '#8b0000';
         el.style.boxShadow = '0 0 0 3px rgba(139,26,26,0.2)';
+        if (!firstEmpty) firstEmpty = el;
       } else {
         el.style.borderColor = '';
         el.style.boxShadow = '';
@@ -506,6 +504,7 @@
 
     if (!allFilled) {
       alert('Please answer all required questions before submitting.');
+      firstEmpty.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
@@ -529,19 +528,17 @@
     };
 
     try {
-      await emailjs.send('service_sf7a55a''template_m8h7jo7', templateParams);
+      await emailjs.send('service_sf7a55a', 'template_m8h7jo7', templateParams);
       document.getElementById('form-wrapper').style.display = 'none';
-      const s = document.getElementById('success-screen');
-      s.style.display = 'block';
-      s.classList.add('fade-in');
+      document.getElementById('success-message').style.display = 'block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
-      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Submit to The Discovery Lab`;
+      btn.textContent = 'Submit to The Discovery Lab';
       btn.disabled = false;
       alert('Something went wrong. Please try again.');
       console.error('EmailJS error:', err);
     }
-  });
+  });      
 </script>
 </body>
 </html>
